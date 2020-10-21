@@ -1,0 +1,47 @@
+#!/bin/bash
+echo -e "##
+## EPITECH PROJECT, 2020
+## Makefile
+## File description:
+## make file.
+##
+
+SRC\t=\t$(ls | grep -e "\w*\.c" | sed ':a;N;$!ba;s/\n/ \\\n\t\t/g;$ s/$//g')\n
+OBJ\t=\t\$(SRC:.c=.o)\n" > Makefile
+
+if [ "$1" == "-L" ]
+then
+    echo -e "NAME\t=\t$2" >> Makefile
+else
+    echo -e "NAME\t=\t$1" >> Makefile
+fi
+
+echo -e "
+all:\t\$(NAME)\n
+\$(NAME):
+\tgcc -c \$(SRC)" >> Makefile
+
+if [ "$1" == "-L" ]
+then
+    echo -e "\tar -rc \$(NAME) \$(OBJ)
+\tcp \$(NAME) ..
+\tmkdir -p ../../include
+\tcp *.h ../../include" >> Makefile
+else
+    echo -e "\tgcc -o \$(NAME) \$(OBJ)" >> Makefile
+fi
+
+echo -e "
+clean:
+\trm -f *.o
+\trm -f \#*# *~\n
+fclean:\tclean
+\trm -f \$(NAME)" >> Makefile
+
+if [ "$1" == "-L" ]
+then
+    echo -e "\trm -r ../../include
+\trm -f ../\$(NAME)\n" >> Makefile
+fi
+
+echo -e "re:\tfclean all" >> Makefile

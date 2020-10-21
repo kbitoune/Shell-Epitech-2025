@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo -e "/*
+** EPITECH PROJECT, 2020
+** $1
+** File description:
+** $(echo "$1" | sed -e 's/\./_/g')
+*/\n" > $1
+echo -e "$(ls | grep -e "\.h$" | sed '/'$1'/d; s/^/#include \"/g; s/$/\"/g')\n" >> $1
+echo -e "#ifndef __$(echo "$1" | sed -e 's/\(.*\)/\U\1/g;s/\./_/g')__
+    #define __$(echo "$1" | sed -e 's/\(.*\)/\U\1/g;s/\./_/g')__" >> $1
+echo -e "$(cat *.c | grep -e "^\w" | grep -e ")$" | sed '/static/d' | sed 's/$/;/g' | sed 's/^/        /g')" >> $1
+echo -e "#endif" >> $1
