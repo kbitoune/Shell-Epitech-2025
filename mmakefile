@@ -1,4 +1,19 @@
 #!/bin/bash
+
+if [ "$#" != 1 ]
+then
+    echo "usage : mmakefile [name of the file that the makefile should create]"
+    echo -e "\nFile : (file that the makefile can create)\n
+ - library\t: file with extension '.a' (ex: mmakefile libmy.a)
+ - executable\t: binary file with extension '.out' or not (ex : mmakefile calc)"
+    exit
+elif [ "$(find -maxdepth 1 -type f -name "*.c")" == "" ]
+then
+    echo -e "mmakefile : not '.c' files detected.
+mmakefile : mmakefile must be executed in the folder containing your '.c' files."
+    exit
+fi
+
 echo -e "##
 ## EPITECH PROJECT, 2020
 ## Makefile
@@ -7,41 +22,48 @@ echo -e "##
 ##
 
 SRC\t=\t$(ls | grep -e "\w*\.c" | sed ':a;N;$!ba;s/\n/ \\\n\t\t/g;$ s/$//g')\n
-OBJ\t=\t\$(SRC:.c=.o)\n" > Makefile
+OBJ\t=\t\$(SRC:.c=.o)\n
+NAME\t=\t$1\n
+all:\t\$(NAME)\n"   >   Makefile
 
-if [ "$1" == "-L" ]
+if [ "$1" == "$(echo $1 | grep -e "\w*\.a$")" ]
 then
-    echo -e "NAME\t=\t$2" >> Makefile
-else
-    echo -e "NAME\t=\t$1" >> Makefile
-fi
-
-echo -e "
-all:\t\$(NAME)\n
-\$(NAME):
-\tgcc -c \$(SRC)" >> Makefile
-
-if [ "$1" == "-L" ]
-then
-    echo -e "\tar -rc \$(NAME) \$(OBJ)
+    echo -e "\$(NAME):
+\tgcc -c \$(SRC)
+\tar -rc \$(NAME) \$(OBJ)
 \tcp \$(NAME) ..
 \tmkdir -p ../../include
-\tcp *.h ../../include" >> Makefile
-else
-    echo -e "\tgcc -o \$(NAME) \$(OBJ)" >> Makefile
-fi
-
-echo -e "
+\tcp *.h ../../include\n
 clean:
 \trm -f *.o
 \trm -f \#*# *~\n
-fclean:\tclean
-\trm -f \$(NAME)" >> Makefile
-
-if [ "$1" == "-L" ]
+fclean: clean
+\trm -f \$(NAME)
+\trm -r ../../include
+\trm -f ../\$(NAME)\n
+re:\tfclean all"   >>    Makefile
+elif [ "$(find -maxdepth 2 -type d -name "my")" == "./lib/my" ]
 then
-    echo -e "\trm -r ../../include
-\trm -f ../\$(NAME)\n" >> Makefile
+    echo -e "\$(NAME):
+\tcd lib/my/ && make && cd ../..
+\tgcc -c \$(SRC) -I include/ -L lib/ -lmy
+\tgcc -o \$(NAME) \$(OBJ) -I include/ -L lib/ -lmy\n
+clean:
+\tcd lib/my/ && make clean && cd ../..
+\trm -f *.o
+\trm -f \#*# *~\n
+fclean: clean
+\trm -f \$(NAME)
+\tcd lib/my/ && make fclean && cd ../..\n
+re:\tfclean all"   >>   Makefile
+else
+    echo -e "\$(NAME):
+\tgcc -c \$(SRC)
+\tgcc -o \$(NAME) \$(OBJ)\n
+clean:
+\trm -f *.o
+\trm -f \#*# *~\n
+fclean: clean
+\trm -f \$(NAME)\n
+re:\tfclean all"   >>   Makefile
 fi
-
-echo -e "re:\tfclean all" >> Makefile
