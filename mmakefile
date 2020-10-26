@@ -1,11 +1,20 @@
 #!/bin/bash
-
-if [ "$#" != 1 ]
+if [ "$#" != 2 ]
 then
-    echo "usage : mmakefile [name of the file that the makefile should create]"
+    echo "usage : mmakefile [name] [-classic or -csfml]"
     echo -e "\nFile : (file that the makefile can create)\n
- - library\t: file with extension '.a' (ex: mmakefile libmy.a)
- - executable\t: binary file with extension '.out' or not (ex : mmakefile calc)"
+ - library\t: file with extension '.a' (ex: mmakefile libmy.a classic)
+ - executable\t: binary file with extension '.out' or not (ex : mmakefile calc classic)
+ \nFlag :
+ - classic\t: for a classic Makefile
+ - csfml\t: a Makefile with include of CSFML
+ \nCommands:
+ - clean\t: remove all unnecessary files
+ - fclean\t: remove all unnecessary files and the binary
+ - re\t: compile your code with your modifications
+ - update\t: update your makefile with your new .c
+ - prepush\t : remove all unnecessary files and the binary, add in your git and give you a status
+ "
     exit
 elif [ "$(find -maxdepth 1 -type f -name "*.c")" == "" ]
 then
@@ -23,8 +32,7 @@ echo -e "##
 
 SRC\t=\t$(ls | grep -e "\w*\.c" | sed ':a;N;$!ba;s/\n/ \\\n\t\t/g;$ s/$//g')\n
 OBJ\t=\t\$(SRC:.c=.o)\n
-NAME\t=\t$1\n
-all:\t\$(NAME)\n"   >   Makefile
+NAME\t=\t$1\n"   >   Makefile
 
 if [ "$1" == "$(echo $1 | grep -e "\w*\.a$")" ]
 then
@@ -36,34 +44,77 @@ then
 \tcp *.h ../../include\n
 clean:
 \trm -f *.o
-\trm -f \#*# *~\n
+\trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
 fclean: clean
 \trm -f \$(NAME)
 \trm -r ../../include
 \trm -f ../\$(NAME)\n
-re:\tfclean all"   >>    Makefile
+re:\tfclean all
+valgrind: clean
+\t gcc -g3 -o \$(NAME) \$(SRC) -I include/ -L lib/ -lmy
+update:
+\t mmakefile $1 $2
+prepush: fclean
+\tgit add .\n\tgit status"   >>    Makefile
+echo "Makefile avec la lib crée !"
 elif [ "$(find -maxdepth 2 -type d -name "my")" == "./lib/my" ]
 then
-    echo -e "\$(NAME):
+    echo -e "all:\t\$(NAME)\n
+\$(NAME):
 \tcd lib/my/ && make && cd ../..
 \tgcc -c \$(SRC) -I include/ -L lib/ -lmy
 \tgcc -o \$(NAME) \$(OBJ) -I include/ -L lib/ -lmy\n
 clean:
 \tcd lib/my/ && make clean && cd ../..
 \trm -f *.o
-\trm -f \#*# *~\n
+\trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
 fclean: clean
 \trm -f \$(NAME)
 \tcd lib/my/ && make fclean && cd ../..\n
-re:\tfclean all"   >>   Makefile
+re:\tfclean all\n
+valgrind: clean
+\t gcc -g3 -o \$(NAME) \$(SRC) -I include/ -L lib/ -lmy
+\nupdate:
+\t mmakefile $1 $2
+\nprepush: fclean
+\tgit add .\n\tgit status"   >>   Makefile
+echo "Makefile avec la lib crée !"
+elif [ "$2" == "-csfml" ]
+then
+  echo -e "CSFML = -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio\n
+all:\t\$(NAME)\n
+\$(NAME):
+\tgcc -c \$(SRC)
+\tgcc -o \$(NAME) \$(OBJ) \$(CSFML)\n
+clean:
+\trm -f *.o
+\trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
+fclean: clean
+\trm -f \$(NAME)\n
+re:\tfclean all\n
+valgrind: clean
+\t gcc -g3 -o \$(NAME) \$(SRC)
+\nupdate:
+\t mmakefile $1 $2
+\nprepush: fclean
+\tgit add .\n\tgit status"   >>   Makefile
+echo "Makefile csfml crée !"
 else
-    echo -e "\$(NAME):
+    echo -e "all:\t\$(NAME)\n
+\$(NAME):
 \tgcc -c \$(SRC)
 \tgcc -o \$(NAME) \$(OBJ)\n
 clean:
 \trm -f *.o
-\trm -f \#*# *~\n
+\trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
 fclean: clean
 \trm -f \$(NAME)\n
-re:\tfclean all"   >>   Makefile
+re:\tfclean all\n
+valgrind: clean
+\t gcc -g3 -o \$(NAME) \$(SRC)
+\nupdate:
+\t mmakefile $1 $2
+\nprepush: fclean
+\tgit add .\n\tgit status"   >>   Makefile
+echo "Makefile classique crée !"
 fi
