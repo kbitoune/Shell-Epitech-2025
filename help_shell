@@ -13,14 +13,16 @@ echo -e '\e[34;33m' "\tmakeheader [nom] (ne pas oublier le .h à la fin)"
 echo -e '\e[34;32m' "\tPermet de créer un header avec tous les balises de fonction qui se trouve dans votre dossier{exemple: makeheader my.h}\n"
 echo -e '\e[34;33m' "\tmmakefile [nom] [-classic, -csfml or -ncurse]"
 echo -e '\e[34;32m'"\tPermet de créer un Makefile adapté selon vos projet"
-echo -e '\e[30;1m' "\t[Flag:]"
+echo -e '\e[30;1m' "\t\t\t[Flag:]"
 echo -e '\e[0;37m' "\t- classic\t: for a classic Makefile
 \t- csfml\t: a Makefile with include of CSFML
 \t- ncurse\t: a Makefile with include of ncurse"
-echo -e '\e[30;1m' "\t[Commands:]"
+echo -e '\e[30;1m' "\t\t\t[Commands:]"
 echo -e '\e[0;37m'"\t- clean\t: remove all unnecessary files
 \t- fclean\t: remove all unnecessary files and the binary
 \t- re\t: compile your code with your modifications
 \t- update\t: update your makefile with your new .c
 \t- prepush\t : remove all unnecessary files and the binary, add in your git and give you a status
 "
+echo -e '\e[1;37m'"[Pour toutes suggestions, ou bien, un bug a signalé veuillez contactez Kyrian Bitoune ou bien Chuky Fredj]"
+echo -e '\e[1;34m' "============================================================================================================================="
