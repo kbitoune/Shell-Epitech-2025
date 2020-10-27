@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$#" != 2 ]
 then
-    echo "usage : mmakefile [name] [-classic or -csfml]"
+    echo "usage : mmakefile [name] [-classic, -csfml or -ncurse]"
     echo -e "\nFile : (file that the makefile can create)\n
  - library\t: file with extension '.a' (ex: mmakefile libmy.a classic)
  - executable\t: binary file with extension '.out' or not (ex : mmakefile calc classic)
