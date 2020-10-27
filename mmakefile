@@ -8,6 +8,7 @@ then
  \nFlag :
  - classic\t: for a classic Makefile
  - csfml\t: a Makefile with include of CSFML
+ - ncurse\t: a Makefile with include of ncurse
  \nCommands:
  - clean\t: remove all unnecessary files
  - fclean\t: remove all unnecessary files and the binary
@@ -93,12 +94,31 @@ fclean: clean
 \trm -f \$(NAME)\n
 re:\tfclean all\n
 valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC)
+\t gcc -g3 -o \$(NAME) \$(SRC) \$(CSFML)
 \nupdate:
 \t mmakefile $1 $2
 \nprepush: fclean
 \tgit add .\n\tgit status"   >>   Makefile
 echo "Makefile csfml crée !"
+elif [ "$2" == "-ncurse" ]
+then
+  echo -e "all:\t\$(NAME)\n
+\$(NAME):
+\tgcc -c \$(SRC)
+\tgcc -o \$(NAME) \$(OBJ) -lncurses\n
+clean:
+\trm -f *.o
+\trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
+fclean: clean
+\trm -f \$(NAME)\n
+re:\tfclean all\n
+valgrind: clean
+\t gcc -g3 -o \$(NAME) \$(SRC) -lncurses
+\nupdate:
+\t mmakefile $1 $2
+\nprepush: fclean
+\tgit add .\n\tgit status"   >>   Makefile
+echo "Makefile ncurse crée !"
 else
     echo -e "all:\t\$(NAME)\n
 \$(NAME):
