@@ -31,7 +31,7 @@ echo -e "##
 ## make file.
 ##
 
-SRC\t=\t$(ls | grep -e "\w*\.c" | sed ':a;N;$!ba;s/\n/ \\\n\t\t/g;$ s/$//g')\n
+SRC\t=\t$(find -maxdepth 2 -type f -name "*.c" | sed ':a;N;$!ba;s/\n/ \\\n\t\t/g;$ s/$//g')\n
 OBJ\t=\t\$(SRC:.c=.o)\n
 NAME\t=\t$1\n"   >   Makefile
 
