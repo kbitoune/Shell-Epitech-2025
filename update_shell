@@ -1,3 +1,4 @@
-git clone git@github.com:kbitoune/Shell-Epitech-2025.git
-Shell-Epitech-2025/installer.sh
-rm -r -f Shell-Epitech-2025
+#!/bin/bash
+git clone https://github.com/kbitoune/Shell-Epitech-2025.git
+cd Shell-Epitech-2025/ && ./installer.sh && cd ..
+rm -rf Shell-Epitech-2025

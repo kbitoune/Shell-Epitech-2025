@@ -41,7 +41,8 @@ NAME\t=\t$1\n"   >   Makefile
 
 if [ "$1" == "$(echo $1 | grep -e "\w*\.a$")" ]
 then
-    echo -e "\$(NAME):
+    echo -e "all:\t\$(NAME)\n
+\$(NAME):
 \tgcc -c \$(SRC)
 \tar -rc \$(NAME) \$(OBJ)
 \tcp \$(NAME) ..
@@ -50,26 +51,26 @@ then
 clean:
 \trm -f *.o
 \trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
-fclean: clean
+fclean:\tclean
 \trm -f \$(NAME)
 \trm -r ../../include
 \trm -f ../\$(NAME)\n
-re:\tfclean all
-valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC) -I include/ -L lib/ -lmy
+re:\tfclean all\n
+valgrind:\tclean
+\tgcc -g3 -o \$(NAME) \$(SRC) -I include/ -L lib/ -lmy\n
 update:
-\t mmakefile $1 $2
-prepush: fclean
-\tgit add .\n\tgit status
-push: prepush
-\tgit commit -m \"push auto\"\n\tgit push origin master
-\nfull: update
-\tmake re
-\npull:
-\tgit pull origin master
-\ntree: prepush
-\ttree -a -I .git
-\ndebug: clean
+\tmmakefile $1 $2\n
+prepush:\tfclean
+\tgit add .\n\tgit status\n
+push:\tprepush
+\tgit commit -m \"push auto\"\n\tgit push origin master\n
+full:\tupdate
+\tmake re\n
+pull:
+\tgit pull origin master\n
+tree:\tprepush
+\ttree -a -I .git\n
+debug:\tclean
 \tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic -I include/ -L lib/ -lmy"   >>    Makefile
 echo "Makefile avec la lib crée !"
 elif [ "$(find -maxdepth 2 -type d -name "my")" == "./lib/my" ]
@@ -83,15 +84,15 @@ clean:
 \tcd lib/my/ && make clean && cd ../..
 \trm -f *.o
 \trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
-fclean: clean
+fclean:\tclean
 \trm -f \$(NAME)
 \tcd lib/my/ && make fclean && cd ../..\n
 re:\tfclean all\n
-valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC) -I include/ -L lib/ -lmy
-\nupdate:
-\t mmakefile $1 $2
-\nprepush: fclean
+valgrind:\tclean
+\tgcc -g3 -o \$(NAME) \$(SRC) -I include/ -L lib/ -lmy\n
+update:
+\tmmakefile $1 $2\n
+prepush:\tfclean
 \tgit add .\n\tgit status"   >>   Makefile
 echo "Makefile avec la lib crée !"
 elif [ "$2" == "-csfml" ]
@@ -104,24 +105,24 @@ all:\t\$(NAME)\n
 clean:
 \trm -f *.o
 \trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
-fclean: clean
+fclean:\tclean
 \trm -f \$(NAME)\n
 re:\tfclean all\n
-valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC) \$(CSFML)
+valgrind:\tclean
+\tgcc -g3 -o \$(NAME) \$(SRC) \$(CSFML)
 update:
-\t mmakefile $1 $2
-\nprepush: fclean
-\tgit add .\n\tgit status
-\nfull: update
-\tmake re
-\npull:
-\tgit pull origin master
-\ntree: prepush
-\ttree -a -I .git
-\ndebug: clean
-\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic \$(CSFML)
-\npush: prepush
+\tmmakefile $1 $2\n
+prepush: fclean
+\tgit add .\n\tgit status\n
+full:\tupdate
+\tmake re\n
+pull:
+\tgit pull origin master\n
+tree:\tprepush
+\ttree -a -I .git\n
+debug:\tclean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic \$(CSFML)\n
+push: prepush
 \tgit commit -m \"push auto\"\n\tgit push origin master"   >>   Makefile
 echo "Makefile csfml crée !"
 elif [ "$2" == "-ncurse" ]
@@ -133,24 +134,24 @@ then
 clean:
 \trm -f *.o
 \trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
-fclean: clean
+fclean:\tclean
 \trm -f \$(NAME)\n
 re:\tfclean all\n
-valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC) -lncurses
+valgrind:\tclean
+\tgcc -g3 -o \$(NAME) \$(SRC) -lncurses\n
 update:
-\t mmakefile $1 $2
-\nprepush: fclean
-\tgit add .\n\tgit status
-\nfull: update
-\tmake re
-\npull:
-\tgit pull origin master
-\ntree: prepush
-\ttree -a -I .git
-\ndebug: clean
-\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic -lncurses
-\npush: prepush
+\tmmakefile $1 $2\n
+prepush: fclean
+\tgit add .\n\tgit status\n
+full: update
+\tmake re\n
+pull:
+\tgit pull origin master\n
+tree: prepush
+\ttree -a -I .git\n
+debug: clean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic -lncurses\n
+push: prepush
 \tgit commit -m \"push auto\"\n\tgit push origin master"   >>   Makefile
 echo "Makefile ncurse crée !"
 else
@@ -161,24 +162,24 @@ else
 clean:
 \trm -f *.o
 \trm -f *# *~ ./*/*# ./*/*~ ./*/*/*# ./*/*/*~ vgcore*\n
-fclean: clean
+fclean:\tclean
 \trm -f \$(NAME)\n
 re:\tfclean all\n
-valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC)\n
+valgrind:\tclean
+\tgcc -g3 -o \$(NAME) \$(SRC)\n
 update:
-\t mmakefile $1 $2
-\nprepush: fclean
-\tgit add .\n\tgit status
-\nfull: update
-\tmake re
-\npull:
-\tgit pull origin master
-\ntree: prepush
-\ttree -a -I .git
-\ndebug: clean
-\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic
-\npush: prepush
+\tmmakefile $1 $2\n
+prepush: fclean
+\tgit add .\n\tgit status\n
+full: update
+\tmake re\n
+pull:
+\tgit pull origin master\n
+tree: prepush
+\ttree -a -I .git\n
+debug: clean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic\n
+push: prepush
 \tgit commit -m \"push auto\"\n\tgit push origin master"   >>   Makefile
 echo "Makefile classique crée !"
 fi
