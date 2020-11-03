@@ -17,7 +17,7 @@ then
  - prepush\t : remove all unnecessary files and the binary, add in your git and give you a status
  "
     exit
-elif [ "$(find -maxdepth 1 -type f -name "*.c")" == "" ]
+elif [ "$(find -maxdepth 2 -type f -name "*.c")" == "" ]
 then
     echo -e "mmakefile : not '.c' files detected.
 mmakefile : mmakefile must be executed in the folder containing your '.c' files."
@@ -56,7 +56,17 @@ valgrind: clean
 update:
 \t mmakefile $1 $2
 prepush: fclean
-\tgit add .\n\tgit status"   >>    Makefile
+\tgit add .\n\tgit status
+push: prepush
+\tgit commit -m \"push auto\"\n\tgit push origin master
+\nfull: update
+\tmake re
+\npull:
+\tgit pull origin master
+\ntree: prepush
+\ttree -a -I .git
+\ndebug: clean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic -I include/ -L lib/ -lmy"   >>    Makefile
 echo "Makefile avec la lib crée !"
 elif [ "$(find -maxdepth 2 -type d -name "my")" == "./lib/my" ]
 then
@@ -98,7 +108,17 @@ valgrind: clean
 \nupdate:
 \t mmakefile $1 $2
 \nprepush: fclean
-\tgit add .\n\tgit status"   >>   Makefile
+\tgit add .\n\tgit status
+\nfull: update
+\tmake re
+\npull:
+\tgit pull origin master
+\ntree: prepush
+\ttree -a -I .git
+\ndebug: clean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic \$(CSFML)
+\npush: prepush
+\tgit commit -m \"push auto\"\n\tgit push origin master"   >>   Makefile
 echo "Makefile csfml crée !"
 elif [ "$2" == "-ncurse" ]
 then
@@ -117,7 +137,17 @@ valgrind: clean
 \nupdate:
 \t mmakefile $1 $2
 \nprepush: fclean
-\tgit add .\n\tgit status"   >>   Makefile
+\tgit add .\n\tgit status
+\nfull: update
+\tmake re
+\npull:
+\tgit pull origin master
+\ntree: prepush
+\ttree -a -I .git
+\ndebug: clean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic -lncurses
+\npush: prepush
+\tgit commit -m \"push auto\"\n\tgit push origin master"   >>   Makefile
 echo "Makefile ncurse crée !"
 else
     echo -e "all:\t\$(NAME)\n
@@ -131,10 +161,20 @@ fclean: clean
 \trm -f \$(NAME)\n
 re:\tfclean all\n
 valgrind: clean
-\t gcc -g3 -o \$(NAME) \$(SRC)
+\t gcc -g3 -o \$(NAME) \$(SRC)\n
 \nupdate:
 \t mmakefile $1 $2
 \nprepush: fclean
-\tgit add .\n\tgit status"   >>   Makefile
+\tgit add .\n\tgit status
+\nfull: update
+\tmake re
+\npull:
+\tgit pull origin master
+\ntree: prepush
+\ttree -a -I .git
+\ndebug: clean
+\tgcc -g3 -o \$(NAME) \$(SRC) -Wall -Wextra -pedantic
+\npush: prepush
+\tgit commit -m \"push auto\"\n\tgit push origin master"   >>   Makefile
 echo "Makefile classique crée !"
 fi
