@@ -15,6 +15,10 @@ then
  - re\t: compile your code with your modifications
  - update\t: update your makefile with your new .c
  - prepush\t : remove all unnecessary files and the binary, add in your git and give you a status
+ - full\t : update your makefile with your new .c and compile your code with your modifications
+ - pull\t : maka a git pull
+ - tree:\t : remove all unnecessary files and the binary, add in your git and give you a status and make a tree
+ - debug:\t : remove all unnecessary files and the binary, add in your git and give you a status
  "
     exit
 elif [ "$(find -maxdepth 2 -type f -name "*.c")" == "" ]
@@ -105,7 +109,7 @@ fclean: clean
 re:\tfclean all\n
 valgrind: clean
 \t gcc -g3 -o \$(NAME) \$(SRC) \$(CSFML)
-\nupdate:
+update:
 \t mmakefile $1 $2
 \nprepush: fclean
 \tgit add .\n\tgit status
@@ -134,7 +138,7 @@ fclean: clean
 re:\tfclean all\n
 valgrind: clean
 \t gcc -g3 -o \$(NAME) \$(SRC) -lncurses
-\nupdate:
+update:
 \t mmakefile $1 $2
 \nprepush: fclean
 \tgit add .\n\tgit status
@@ -162,7 +166,7 @@ fclean: clean
 re:\tfclean all\n
 valgrind: clean
 \t gcc -g3 -o \$(NAME) \$(SRC)\n
-\nupdate:
+update:
 \t mmakefile $1 $2
 \nprepush: fclean
 \tgit add .\n\tgit status

@@ -23,6 +23,11 @@ echo -e '\e[0;37m'"\t- clean\t: remove all unnecessary files
 \t- re\t: compile your code with your modifications
 \t- update\t: update your makefile with your new .c
 \t- prepush\t : remove all unnecessary files and the binary, add in your git and give you a status
+\t- full\t : update your makefile with your new .c and compile your code with your modifications
+\t- pull\t : maka a git pull
+\t- tree:\t : remove all unnecessary files and the binary, add in your git and give you a status and make a tree
+\t- debug:\t : remove all unnecessary files and the binary, add in your git and give you a status
+\t- push:\t : push in your git
 "
 echo -e '\e[1;37m'"[Pour toutes suggestions, ou bien, un bug a signalé veuillez contactez Kyrian Bitoune ou bien Chuky Fredj]"
 echo -e '\e[1;34m' "============================================================================================================================="
