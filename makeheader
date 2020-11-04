@@ -9,6 +9,6 @@ echo -e "/*
 echo -e "$(ls | grep -e "\.h$" | sed '/'$1'/d; s/^/#include \"/g; s/$/\"/g')\n" >> $1
 echo -e "#ifndef __$(echo "$1" | sed -e 's/\(.*\)/\U\1/g;s/\./_/g')__
     #define __$(echo "$1" | sed -e 's/\(.*\)/\U\1/g;s/\./_/g')__" >> $1
-echo -e "$(cat *.c | grep -e "^\w" | grep -e ")$" | sed '/static/d' | sort | sed 's/$/;/g' | sed 's/^/        /g')" >> $1
+echo -e "$(cat *.c | grep -e "^\w" | grep -e ")$" | sed '/static/d' | awk '{ print length, $0 }' | sort -b -k2,2 -k1,1 | cut -d" " -f2- | sed 's/$/;/g' | sed 's/^/        /g')" >> $1
 echo -e "#endif" >> $1
 echo "Header crée !"
